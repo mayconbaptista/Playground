@@ -1,0 +1,26 @@
+version: '3.4'
+
+services:
+  efcore:
+    image: ${DOCKER_REGISTRY-}efcore
+    depends_on:
+      - ecommerce.orderDb
+    build:
+      context: .
+      dockerfile: Efcore/Dockerfile
+    ports:
+      - "5000:5000"
+      - "5001:5001"
+      - "8080:8080"
+
+  ecommerce.orderDb:
+    image: mysql
+    container_name: playground_db_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_PASSWORD: playground_efcore123
+      MYSQL_DATABASE: orderdb
+      MYSQL_USER: playground_efcore
+    ports:
+      - "3307:3306"    
+  

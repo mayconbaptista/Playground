@@ -1,0 +1,11 @@
+@Efcore_HostAddress = http://localhost:5099
+
+GET {{Efcore_HostAddress}}/todos/
+Accept: application/json
+
+###
+
+GET {{Efcore_HostAddress}}/todos/1
+Accept: application/json
+
+###

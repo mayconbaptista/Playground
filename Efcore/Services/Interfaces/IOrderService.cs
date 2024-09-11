@@ -2,9 +2,9 @@
 {
     public interface IOrderService
     {
-        Task<OrderEntity> CreateAsync(OrderEntity order);
-        Task<OrderEntity> UpdateAsync(OrderEntity order);
-        Task<OrderEntity> DeleteAsync(OrderEntity order);
-        Task<OrderEntity> GetAsync(uint id);
+        Task<uint> CreateAsync(OrderCreateRequest order);
+        Task<OrderResponse> GetByIdAsync(uint id);
+        Task UpdateAsync(OrderUpdateRequest order);
+        Task DeleteAsync (uint id);
     }
 }

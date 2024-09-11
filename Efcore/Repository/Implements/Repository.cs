@@ -2,16 +2,11 @@
 
 namespace Efcore.Repository.Implements
 {
-    public class Repository<TEntity> : IRepository<TEntity> where TEntity : BaseEntity
+    public class Repository<TEntity>(AppDbContext context) : IRepository<TEntity> where TEntity : BaseEntity
     {
-        protected readonly AppDbContext context;
-        protected readonly DbSet<TEntity> dbSet;
+        protected readonly AppDbContext context = context;
+        protected readonly DbSet<TEntity> dbSet = context.Set<TEntity>();
 
-        public Repository(AppDbContext context)
-        {
-            this.context = context;
-            this.dbSet = context.Set<TEntity>();
-        }
         public async Task<TEntity> CreateAsync(TEntity entity)
         {
             await this.dbSet.AddAsync(entity);

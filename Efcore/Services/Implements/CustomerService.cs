@@ -1,31 +1,32 @@
 ﻿
 namespace Efcore.Services.Implements;
 
-public sealed class CustomerService : ICustomerService
+public sealed class CustomerService(IRepository<CustomerEntity> repository, IMapper mapper) : ICustomerService
 {
-    private readonly IRepository<CustomerEntity> _repository;
+    private readonly IRepository<CustomerEntity> _repository = repository;
+    private readonly IMapper _mapper = mapper;
 
-    public CustomerService(IRepository<CustomerEntity> repository)
+    public async Task<uint> CreateAsync(CustomerEntity customer)
     {
-        _repository = repository;
+        await _repository.CreateAsync(customer);
+
+        return customer.Id;
     }
 
-    public async Task<CustomerEntity> CreateAsync(CustomerEntity customer)
-    {
-        return await _repository.CreateAsync(customer);
-    }
-
-    public Task<CustomerEntity> DeleteAsync(CustomerEntity customer)
+    public Task DeleteAsync(uint id)
     {
         throw new NotImplementedException();
     }
 
-    public Task<CustomerEntity> GetAsync(uint id)
+    public async Task<CustomerResponse> GetAsync(uint id)
     {
-        throw new NotImplementedException();
+        var entt = await _repository.GetByIdAsync(id)
+            ?? throw new NotFoundException($"Não foi encontrado Cliente com identificação {id}.");
+
+        return this._mapper.Map<CustomerResponse>(entt);
     }
 
-    public Task<CustomerEntity> UpdateAsync(CustomerEntity customer)
+    public Task UpdateAsync(CustomerRequest customer)
     {
         throw new NotImplementedException();
     }

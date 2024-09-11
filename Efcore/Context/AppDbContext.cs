@@ -1,11 +1,9 @@
 ﻿
 namespace Efcore.Context;
 
-public class AppDbContext : DbContext
+public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-    {
-    }
+    private readonly ILoggerFactory _logger = LoggerFactory.Create(builder => builder.AddConsole());
 
     public DbSet<CustomerEntity> Customers { get; set; }
     public DbSet<OrderEntity> Orders  { get; set; }
@@ -21,5 +19,16 @@ public class AppDbContext : DbContext
         modelBuilder.ApplyConfiguration(new ProductEnttConfig());
         modelBuilder.ApplyConfiguration(new OrderItemEnttConfig());
         modelBuilder.ApplyConfiguration(new PaymentsEnttConfig());
+    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        base.OnConfiguring(optionsBuilder);
+
+        optionsBuilder
+            .UseLoggerFactory(_logger)
+            .EnableSensitiveDataLogging()
+            .EnableDetailedErrors()
+            .AddInterceptors(new ConnectionInterceptor());
     }
 }

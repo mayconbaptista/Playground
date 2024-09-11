@@ -16,3 +16,4 @@ global using AutoMapper;
 global using Efcore.AutoMapper;
 global using Efcore.Request;
 global using Efcore.Response;
+global using Efcore.Exceptions;

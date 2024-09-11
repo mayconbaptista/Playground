@@ -14,11 +14,13 @@ namespace Efcore.Controllers
 
         [HttpGet]
         [Route("{id:int:min(1)}")]
+        [ProducesResponseType(typeof(CustomerResponse),StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAsync(uint id)
         {
             try
             {
                 var result = await _customerService.GetAsync(id);
+
                 return Ok(result);
 
             }catch(Exception ex)
@@ -30,18 +32,9 @@ namespace Efcore.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<IActionResult> CreateAsync(CustomerEntity customer)
+        public IActionResult CreateAsync(CustomerCreateRequest customer)
         {
-            try
-            {
-                var result = await _customerService.CreateAsync(customer);
-
-                return Ok(result);
-
-            }catch(Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return Ok(customer);
         }
     }
 }

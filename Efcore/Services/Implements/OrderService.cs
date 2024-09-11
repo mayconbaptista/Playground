@@ -1,32 +1,29 @@
 ﻿
+using Efcore.Exceptions;
+
 namespace Efcore.Services.Implements
 {
-    public sealed class OrderService : IOrderService
+    public sealed class OrderService(IRepository<OrderEntity> repository,IMapper mapper) : IOrderService
     {
-        public readonly IRepository<OrderEntity> _repository;
+        public readonly IRepository<OrderEntity> _repository = repository;
+        public readonly IMapper _mapper = mapper;
 
-        public OrderService(IRepository<OrderEntity> repository)
-        {
-            _repository = repository;
-        }
-        public Task<OrderEntity> CreateAsync(OrderEntity order)
+        public Task<uint> CreateAsync(OrderCreateRequest order)
         {
             throw new NotImplementedException();
         }
 
-        public Task<OrderEntity> DeleteAsync(OrderEntity order)
+        public Task DeleteAsync(uint id)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<OrderEntity> GetAsync(uint id)
+        public Task<OrderResponse> GetByIdAsync(uint id)
         {
-            var result = await _repository.GetByIdAsync(id) ?? throw new Exception("Order not found");
-
-            return result;
+            throw new NotImplementedException();
         }
 
-        public Task<OrderEntity> UpdateAsync(OrderEntity order)
+        public Task UpdateAsync(OrderUpdateRequest order)
         {
             throw new NotImplementedException();
         }

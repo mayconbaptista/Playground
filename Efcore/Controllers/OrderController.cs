@@ -3,41 +3,43 @@ namespace Efcore.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public sealed class OrderController : ControllerBase
+public sealed class OrderController(IOrderService orderService) : ControllerBase
 {
-    private readonly IOrderService _orderService;
-
-    public OrderController(IOrderService orderService)
-    {
-        _orderService = orderService;
-    }
+    private readonly IOrderService _orderService = orderService;
 
     [HttpPost]
-    public async Task<IActionResult> CreateAsync(OrderEntity order)
+    [ProducesResponseType(typeof(uint), StatusCodes.Status201Created)]
+    public async Task<IActionResult> CreateAsync(OrderCreateRequest order)
     {
         var result = await _orderService.CreateAsync(order);
+
         return Ok(result);
     }
 
-    [HttpDelete]
-    public async Task<IActionResult> DeleteAsync(OrderEntity order)
+    [HttpDelete("{id:int:min(1)}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> DeleteById (uint id)
     {
-        var result = await _orderService.DeleteAsync(order);
-        return Ok(result);
+        await _orderService.DeleteAsync(id);
+
+        return NoContent();
     }
 
     [HttpGet("{id:int:min(1)}")]
-    public async Task<IActionResult> GetAsync([FromRoute] uint id)
+    [ProducesResponseType(typeof(OrderGetByIdResponse), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetByIdAsync([FromRoute] uint id)
     {
-        var result = await _orderService.GetAsync(id);
+        var result = await _orderService.GetByIdAsync(id);
 
         return Ok(result);
     }
 
     [HttpPut]
-    public async Task<IActionResult> UpdateAsync(OrderEntity order)
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public IActionResult UpdateAsync(OrderUpdateRequest order)
     {
-        var result = await _orderService.UpdateAsync(order);
-        return Ok(result);
+        _orderService.UpdateAsync(order);
+
+        return NoContent();
     }
 }

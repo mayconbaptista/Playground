@@ -4,7 +4,7 @@ namespace Efcore.Validation;
 
 public class ValidationDomain
 {
-    private List<string> Errors;
+    private readonly List<string> Errors;
 
     public ValidationDomain() 
     {
@@ -23,7 +23,7 @@ public class ValidationDomain
     {
         if(this.Errors.Any())
         {
-            throw new DomainException(Errors);
+            throw new BadRequestException(Errors);
         }
     }
 }
